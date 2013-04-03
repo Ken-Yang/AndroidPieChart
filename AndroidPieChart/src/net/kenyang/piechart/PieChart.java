@@ -46,10 +46,11 @@ public class PieChart extends View {
 	private int iDisplayWidth, iDisplayHeight;
 	private int iSelectedIndex 	= -1;
 	private int iCenterWidth 	= 0;
-	private int iShift 			= 0;
+	private int iShift			= 0;
 	private int iMargin 		= 0;  // margin to left and right, used for get Radius
 	private int iDataSize		= 0;
-	private RectF r = null;
+	
+	private RectF r 			= null;
 
 	private float fDensity 		= 0.0f;
 	private float fStartAngle 	= 0.0f;
@@ -64,9 +65,11 @@ public class PieChart extends View {
 		iShift 	= (int) fnGetRealPxFromDp(30);
 		iMargin = (int) fnGetRealPxFromDp(40);
 		
+		// used for paint circle
 		paintPieFill = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paintPieFill.setStyle(Paint.Style.FILL);
 
+		// used for paint border
 		paintPieBorder = new Paint(Paint.ANTI_ALIAS_FLAG);
 		paintPieBorder.setStyle(Paint.Style.STROKE);
 		paintPieBorder.setStrokeWidth(fnGetRealPxFromDp(3));
@@ -153,6 +156,7 @@ public class PieChart extends View {
 		// get the percent of the selected degree
 		float fSelectedPercent = fDegree * 100 / DEGREE_360;
 
+		// check which pie was selected
 		float fTotalPercent = 0;
 		for (int i = 0; i < iDataSize; i++) {
 			fTotalPercent += alPercentage.get(i);
@@ -166,9 +170,9 @@ public class PieChart extends View {
 	}
 	
 	private void fnGetDisplayMetrics(Context cxt){
-        final DisplayMetrics dm = cxt.getResources().getDisplayMetrics();
-        fDensity = dm.density;
-    }
+		final DisplayMetrics dm = cxt.getResources().getDisplayMetrics();
+		fDensity = dm.density;
+	}
 	
 	private float fnGetRealPxFromDp(float fDp){
 		return (fDensity!=1.0f) ? fDensity*fDp : fDp;
