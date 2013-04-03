@@ -181,11 +181,11 @@ public class PieChart extends View {
 	public void setAdapter(ArrayList<Float> alPercentage) throws Exception {
 		this.alPercentage = alPercentage;
 		iDataSize = alPercentage.size();
-		int iSum = 0;
+		float fSum = 0;
 		for (int i = 0; i < iDataSize; i++) {
-			iSum+=alPercentage.get(i);
+			fSum+=alPercentage.get(i);
 		}
-		if (iSum!=100){
+		if (fSum!=100){
 			Log.e(TAG,"total percentage is not equl to 100%");
 			iDataSize = 0;
 			throw new Exception();
