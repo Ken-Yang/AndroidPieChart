@@ -32,6 +32,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class PieChart extends View {
+	
+	public interface OnSelectedLisenter{
+		public abstract void onSelected(int iSelectedIndex);
+	}
+	
+	private OnSelectedLisenter onSelectedListener = null;
 
 	private static final String TAG = PieChart.class.getName();
 	private static final int DEGREE_360 = 360;
@@ -76,6 +82,11 @@ public class PieChart extends View {
 		paintPieBorder.setColor(Color.WHITE);
 		Log.e(TAG, "PieChart init");
 
+	}
+	
+	// set listener
+	public void setOnSelectedListener(OnSelectedLisenter listener){
+		this.onSelectedListener = listener;
 	}
 
 	@Override
@@ -164,6 +175,9 @@ public class PieChart extends View {
 				iSelectedIndex = i;
 				break;
 			}
+		}
+		if (onSelectedListener != null){
+			onSelectedListener.onSelected(iSelectedIndex);
 		}
 		invalidate();
 		return super.onTouchEvent(event);
