@@ -79,7 +79,9 @@ try {
     }
   });  
 } catch (Exception e) {
-  Log.e("kenyang","percentage is not equal to 100");
+  if (e.getMessage().equals(PieChart.ERROR_NOT_EQUAL_TO_100)){
+    Log.e("kenyang","percentage is not equal to 100");
+  }
 }
 ```
 
