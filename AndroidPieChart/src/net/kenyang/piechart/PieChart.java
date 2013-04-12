@@ -40,6 +40,7 @@ public class PieChart extends View {
 	private OnSelectedLisenter onSelectedListener = null;
 
 	private static final String TAG = PieChart.class.getName();
+	public static final String ERROR_NOT_EQUAL_TO_100 = "NOT_EQUAL_TO_100";
 	private static final int DEGREE_360 = 360;
 	private static String[] PIE_COLORS 	= null;
 	private static int iColorListSize 	= 0;
@@ -80,7 +81,7 @@ public class PieChart extends View {
 		paintPieBorder.setStyle(Paint.Style.STROKE);
 		paintPieBorder.setStrokeWidth(fnGetRealPxFromDp(3));
 		paintPieBorder.setColor(Color.WHITE);
-		Log.e(TAG, "PieChart init");
+		Log.i(TAG, "PieChart init");
 
 	}
 	
@@ -92,8 +93,7 @@ public class PieChart extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		Log.e(TAG, "Before draw==data size:"+iDataSize);
-		
+		Log.i(TAG, "onDraw");
 		for (int i = 0; i < iDataSize; i++) {
 			
 			// check whether the data size larger than color list size
@@ -127,7 +127,6 @@ public class PieChart extends View {
 			}
 			fStartAngle = fStartAngle + fEndAngle;
 		}
-		Log.e(TAG, "End draw");
 	}
 	
 	@Override
@@ -200,9 +199,9 @@ public class PieChart extends View {
 			fSum+=alPercentage.get(i);
 		}
 		if (fSum!=100){
-			Log.e(TAG,"total percentage is not equl to 100%");
+			Log.e(TAG,ERROR_NOT_EQUAL_TO_100);
 			iDataSize = 0;
-			throw new Exception();
+			throw new Exception(ERROR_NOT_EQUAL_TO_100);
 		}
 		
 	}
