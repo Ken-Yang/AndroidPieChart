@@ -116,7 +116,6 @@ public class PieChart extends View {
 		Log.i(TAG, "onDraw");
 		
 		
-		
 		for (int i = 0; i < iDataSize; i++) {
 
 			// check whether the data size larger than color list size
@@ -254,6 +253,11 @@ public class PieChart extends View {
 	
 	private float fnGetRealPxFromDp(float fDp){
 		return (fDensity!=1.0f) ? fDensity*fDp : fDp;
+	}
+
+	public void setSelectedIndex(int iSelectedIndex) {
+	    this.iSelectedIndex = iSelectedIndex;
+	    this.invalidate();
 	}
 
 	public void setAdapter(ArrayList<PieChartData> alPercentage) throws Exception {
