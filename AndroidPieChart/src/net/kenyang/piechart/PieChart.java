@@ -133,7 +133,7 @@ public class PieChart extends View {
 			    canvas.drawRect(rectLegendIcon[i], paintPieFill);
 
 			    // draw text
-			    canvas.drawText(tmpData.strTitle + " " + fEndAngle + "%",
+			    canvas.drawText(String.format("%1s %2$.2f%%", tmpData.strTitle,fEndAngle),
 	                    fLegendLeft+fnGetRealPxFromDp(15),
 	                    iDisplayHeight-fLegendIconSize*(6-i)- fMargin*(6-i),
 	                    paintText);
@@ -263,10 +263,14 @@ public class PieChart extends View {
 	public void setAdapter(ArrayList<PieChartData> alPercentage) throws Exception {
 		this.alPieCharData = alPercentage;
 		iDataSize         = alPercentage.size();
-		rectLegendIcon    = new RectF[iDataSize];
 		
-		for (int i = 0; i < iDataSize; i++) {
-		    rectLegendIcon[i] = new RectF();
+		if (rectLegendIcon == null) {
+		    rectLegendIcon    = new RectF[iDataSize];
+	        for (int i = 0; i < iDataSize; i++) {
+	            if (rectLegendIcon[i]==null) {
+	                rectLegendIcon[i] = new RectF();
+	            }
+	        }
 		}
         
 		float fSum = 0;
@@ -279,6 +283,7 @@ public class PieChart extends View {
 			iDataSize = 0;
 			throw new Exception(ERROR_NOT_EQUAL_TO_100);
 		}
+		invalidate();
 		
 	}
 	
