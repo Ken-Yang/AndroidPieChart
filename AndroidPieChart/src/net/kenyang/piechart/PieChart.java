@@ -16,6 +16,7 @@
 
 package net.kenyang.piechart;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import net.kenyang.androidpiechart.R;
@@ -45,6 +46,7 @@ public class PieChart extends View {
 	private static final int DEGREE_360 = 360;
 	private static String[] PIE_COLORS 	= null;
 	private static int iColorListSize 	= 0;
+	private final DecimalFormat   decimalFormat =   new   DecimalFormat("##0");
 	
 	
 	private Paint paintPieFill;
@@ -65,8 +67,6 @@ public class PieChart extends View {
 	private RectF rectLegendIcon[] 			= null;
 
 	private float fDensity 		= 0.0f;
-	private float fStartAngle 	= 0.0f;
-	private float fEndAngle 	= 0.0f;
 	private float fLegendLeft         = 0.0f;
 	private float fLegendIconSize     = 0.0f;
 	private float fMargin   = 0.0f;
@@ -110,39 +110,43 @@ public class PieChart extends View {
 		this.onSelectedListener = listener;
 	}
 
+	public void setColor(int index) {
+	    // check whether the data size larger than color list size
+	    if (index>=iColorListSize){
+	        paintPieFill.setColor(Color.parseColor(PIE_COLORS[index%iColorListSize]));
+	    } else {
+	        paintPieFill.setColor(Color.parseColor(PIE_COLORS[index]));
+	    }
+	}
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		Log.i(TAG, "onDraw");
 		
+		// draw legend
+		if (bIsShowLegend) {
+		    for (int i = 0; i < iDataSize; i++) {
+		        setColor(i);
+		        final PieChartData tmpData = alPieCharData.get(i);
+		        final float fEndAngle = alPieCharData.get(i).fPercentage;
+		        canvas.drawRect(rectLegendIcon[i], paintPieFill);
+
+                // draw text
+                canvas.drawText(String.format("%1s %2$.2f%%", tmpData.strTitle, fEndAngle),
+                        fLegendLeft+fnGetRealPxFromDp(15),
+                        iDisplayHeight-fLegendIconSize*(6-i)- fMargin*(6-i),
+                        paintText);
+		    }
+		}
+
 		
 		for (int i = 0; i < iDataSize; i++) {
 
-			// check whether the data size larger than color list size
-			if (i>=iColorListSize){
-				paintPieFill.setColor(Color.parseColor(PIE_COLORS[i%iColorListSize]));
-			}else{
-				paintPieFill.setColor(Color.parseColor(PIE_COLORS[i]));
-			}
-			
 			final PieChartData tmpData = alPieCharData.get(i);
-			fEndAngle = tmpData.fPercentage;
-            
-			if (bIsShowLegend) {
-			    // draw rectangle
-			    canvas.drawRect(rectLegendIcon[i], paintPieFill);
-
-			    // draw text
-			    canvas.drawText(String.format("%1s %2$.2f%%", tmpData.strTitle,fEndAngle),
-	                    fLegendLeft+fnGetRealPxFromDp(15),
-	                    iDisplayHeight-fLegendIconSize*(6-i)- fMargin*(6-i),
-	                    paintText);
-
-			}
-
-
 			// convert percentage to angle
-			fEndAngle = fEndAngle / 100 * DEGREE_360;
+			final float fEndAngle = tmpData.fPercentage / 100 * DEGREE_360;
+			float fStartAngle    = 0.0f;
 
 			// if the part of pie was selected then change the coordinate
 			if (iSelectedIndex == i) {
@@ -154,6 +158,7 @@ public class PieChart extends View {
 				canvas.translate(fX * iShift, fY * iShift);
 			}
 
+			setColor(i);
 			canvas.drawArc(rectPie, fStartAngle, fEndAngle, true, paintPieFill);
 
 			// if the part of pie was selected then draw a border
@@ -278,7 +283,7 @@ public class PieChart extends View {
 			fSum+=alPercentage.get(i).fPercentage;
 		}
 		
-		if (fSum!=100){
+		if (!decimalFormat.format(fSum).equals("100")){
 			Log.e(TAG,ERROR_NOT_EQUAL_TO_100);
 			iDataSize = 0;
 			throw new Exception(ERROR_NOT_EQUAL_TO_100);
