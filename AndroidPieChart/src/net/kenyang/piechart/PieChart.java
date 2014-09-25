@@ -140,15 +140,14 @@ public class PieChart extends View {
 		    }
 		}
 
-		
+		float fStartAngle    = 0.0f;
 		for (int i = 0; i < iDataSize; i++) {
 
 			final PieChartData tmpData = alPieCharData.get(i);
 			// convert percentage to angle
 			final float fEndAngle = tmpData.fPercentage / 100 * DEGREE_360;
-			float fStartAngle    = 0.0f;
-
 			// if the part of pie was selected then change the coordinate
+
 			if (iSelectedIndex == i) {
 				canvas.save(Canvas.MATRIX_SAVE_FLAG);
 				float fAngle = fStartAngle + fEndAngle / 2;
